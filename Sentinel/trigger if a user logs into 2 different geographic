@@ -1,0 +1,13 @@
+//Design a Sentinel Scheduled Query Rule within Log Analytics that will discover when a user logs in to more than a certain number of
+////locations within a given time period; for example, trigger if a user logs into 2 different geographic regions within a 7 day time period.
+//(ensure the appropriate logs show up before creating the alert rule)//
+
+let LoginattemptTime = timespan(7d);
+let NumberofLoginAllowed = 2;
+SigninLogs
+| where TimeGenerated > ago(LoginattemptTime)
+| summarize Count = count() by UserPrincipalName,UserId, City = tostring(parse_json(LocationDetails).city),
+State = tostring(parse_json(LocationDetails).state), Country = tostring(parse_json(LocationDetails).country)
+| project UserPrincipalName,UserId,City,State,Country
+| summarize AttemptofEachDevice = count() by UserPrincipalName,UserId
+| where AttemptofEachDevice > NumberofLoginAllowed
