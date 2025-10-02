@@ -1,2 +1,4 @@
+This command will install the Azure CLI in your Linux environment which is needed to run the command to upload to blob storage.
 
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
